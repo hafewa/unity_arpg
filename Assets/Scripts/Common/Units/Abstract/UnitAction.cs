@@ -46,6 +46,7 @@ public abstract class UnitAction : MonoBehaviour
     private ActionsSystem _actionSystem;
     public ActionsSystem actionSystem { get { return _actionSystem; }}
 
+    public float range;
     public bool isRunning { get; set; }
     public abstract ActionTarget actionTarget { get; }
 

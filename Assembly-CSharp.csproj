@@ -59,8 +59,8 @@
      <Compile Include="Assets\Scripts\Common\Camera\MainCamerax.cs" />
      <Compile Include="Assets\Scripts\Common\Player\PlayerActionsSystem.cs" />
      <Compile Include="Assets\Scripts\Common\Units\Abstract\UnitAction.cs" />
-     <Compile Include="Assets\Scripts\Common\Units\MovementAction.cs" />
-     <Compile Include="Assets\Scripts\Main\PointProperty.cs" />
+     <Compile Include="Assets\Scripts\Common\Units\Actions\AttackAction.cs" />
+     <Compile Include="Assets\Scripts\Common\Units\Actions\MovementAction.cs" />
      <Compile Include="Assets\SSAO Pro\Demo\Scripts\DemoUI.cs" />
      <Compile Include="Assets\SSAO Pro\Demo\Scripts\RotateAround.cs" />
      <Compile Include="Assets\SSAO Pro\Scripts\Attributes\ColorUsageAttribute.cs" />

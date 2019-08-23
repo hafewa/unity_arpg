@@ -6,9 +6,24 @@ using UnityEngine;
 public class PlayerActionsSystem : ActionsSystem
 {
     public string[] inputs;
+    
+    private UnitAction _movementAction;
+
+    public UnitAction movementAction { get { return _movementAction; } }
+
     public override void Start()
     {
         base.Start();
+        foreach (UnitAction action in actions)
+        {
+            if (action.GetType() == typeof(MovementAction))
+            {
+                _movementAction = action;
+                break;
+            }
+        }
+        if (movementAction == null)
+            throw new Exception("Movement Action is missing!");
     }
 
     void Update()
@@ -17,21 +32,23 @@ public class PlayerActionsSystem : ActionsSystem
         {
             if (Input.GetButton(inputs[i])) 
             {
-                switch (Actions[i].actionTarget)
+                switch (actions[i].actionTarget)
                 {
                     case ActionTarget.None:
                     {
-                        ActionHandlerNoneTarget(Actions[i]);
+                        ActionHandlerNoneTarget(actions[i]);
                         break;
                     }
                     case ActionTarget.Point:
                     {
-                        ActionHandlerPointTarget(Actions[i]);
+                        ActionHandlerPointTarget(actions[i]);
                         break;
                     }
                     case ActionTarget.Enemy:
                     {
-                        ActionHandlerEnemyTarget(Actions[i]);
+                        if (!ActionHandlerEnemyTarget(actions[i])) {
+                            ActionHandlerPointTarget(movementAction);
+                        }
                         break;
                     }
                     default: break;
@@ -41,12 +58,13 @@ public class PlayerActionsSystem : ActionsSystem
         }
     }
 
-    void ActionHandlerNoneTarget(UnitAction action)
+    bool ActionHandlerNoneTarget(UnitAction action)
     {
-        action.Run();
+        currentAction = action;
+        return true;
     }
 
-    void ActionHandlerPointTarget(UnitAction action)
+    bool ActionHandlerPointTarget(UnitAction action)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -55,11 +73,14 @@ public class PlayerActionsSystem : ActionsSystem
         {
             pointTarget = hit.point;
             objectTarget = hit.transform.gameObject;
-            action.Run();
+            currentAction = action;
+            isPreparing = true;
+            return true;
         }
+        return false;
     }
 
-    void ActionHandlerEnemyTarget(UnitAction action)
+    bool ActionHandlerEnemyTarget(UnitAction action)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -68,8 +89,11 @@ public class PlayerActionsSystem : ActionsSystem
         {
             pointTarget = hit.point;
             objectTarget = hit.transform.gameObject;
-            action.Run();
+            currentAction = action;
+            isPreparing = true;
+            return true;
         }
+        return false;
     }
 
 }
